@@ -14,7 +14,7 @@ extern "C" {
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
-
+#include "driver/gpio.h"
 #include "driver/uart.h"
 #include "driver/spi_common.h"
 
@@ -28,7 +28,7 @@ uint32_t sdk_system_get_time ();
 #define uart_set_baud(p,r)  uart_set_baudrate (p,r)
 
 #ifdef CONFIG_FREERTOS_ASSERT_ON_UNTESTED_FUNCTION
-#define vTaskDelayUntil(t,d) { *t=*t; vTaskDelay(d); }
+/* #define vTaskDelayUntil(t,d) { *t=*t; vTaskDelay(d); } */
 #endif
 
 #define IRAM IRAM_ATTR

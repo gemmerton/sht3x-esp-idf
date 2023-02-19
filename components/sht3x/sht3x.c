@@ -118,8 +118,11 @@ sht3x_sensor_t* sht3x_init_sensor(uint8_t bus, uint8_t addr)
     sht3x_sensor_t* dev;
 
     if ((dev = malloc (sizeof(sht3x_sensor_t))) == NULL)
+    {
+        printf("------ dev = null \n");
         return NULL;
-    
+    }
+
     // inititalize sensor data structure
     dev->bus  = bus;
     dev->addr = addr;
@@ -133,17 +136,20 @@ sht3x_sensor_t* sht3x_init_sensor(uint8_t bus, uint8_t addr)
     // try to reset the sensor
     if (!sht3x_reset(dev))
     {
+        printf("------ could not reset sensor \n");
         debug_dev ("could not reset the sensor", __FUNCTION__, dev);
     }
     
     // check again the status after clear status command
     if (!sht3x_get_status(dev, &status))
     {
+        printf("------ could not get sensor status \n");
         error_dev ("could not get sensor status", __FUNCTION__, dev);
         free(dev);
         return NULL;       
     }
     
+    printf("------ sensor initialised \n");
     debug_dev ("sensor initialized", __FUNCTION__, dev);
     return dev;
 }

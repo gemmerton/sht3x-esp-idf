@@ -75,8 +75,9 @@ void i2c_init (int bus, gpio_num_t scl, gpio_num_t sda, uint32_t freq)
     conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
     conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
     conf.master.clk_speed = freq;
-    i2c_param_config(bus, &conf);
+    conf.clk_flags = 0;
     i2c_driver_install(bus, I2C_MODE_MASTER, 0, 0, 0);
+    i2c_param_config(bus, &conf);
 }
 
 int i2c_slave_write (uint8_t bus, uint8_t addr, const uint8_t *reg, 
@@ -90,7 +91,7 @@ int i2c_slave_write (uint8_t bus, uint8_t addr, const uint8_t *reg,
     if (data)
         i2c_master_write(cmd, data, len, true);
     i2c_master_stop(cmd);
-    esp_err_t err = i2c_master_cmd_begin(bus, cmd, 1000 / portTICK_RATE_MS);
+    esp_err_t err = i2c_master_cmd_begin(bus, cmd, 1000 / portTICK_PERIOD_MS);
     i2c_cmd_link_delete(cmd);
     
     return err;
@@ -118,7 +119,7 @@ int i2c_slave_read (uint8_t bus, uint8_t addr, const uint8_t *reg,
         i2c_master_read_byte(cmd, data + len-1, I2C_NACK_VAL);
         i2c_master_stop(cmd);
     }
-    esp_err_t err = i2c_master_cmd_begin(bus, cmd, 1000 / portTICK_RATE_MS);
+    esp_err_t err = i2c_master_cmd_begin(bus, cmd, 1000 / portTICK_PERIOD_MS);
     i2c_cmd_link_delete(cmd);
 
     return err;
